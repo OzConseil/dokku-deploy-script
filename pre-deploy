@@ -4,9 +4,14 @@ source "$PLUGIN_CORE_AVAILABLE_PATH/common/functions"
 APP="$1"; IMAGE_TAG="$2"; IMAGE=$(get_app_image_name $APP $IMAGE_TAG)
 verify_app_name "$APP"
 
-dokku_log_info1 "Running deploy script"
-id=$(docker run -d $IMAGE /bin/bash -c "cd /var/www && npm run deploy && composer run-script deploy")
-test $(docker wait $id) -eq 0
-docker commit $id $IMAGE > /dev/null
-dokku_log_info1 "Deploy script complete"
+if [[ -f "$DOKKU_ROOT/$APP/.deploy" ]]; then
+  dokku_log_info1 "Running deploy script"
+  id=$(docker run -d $IMAGE /bin/bash -c "$(cat $DOKKU_ROOT/$APP/.deploy)")
+  docker logs -f $id
+  test $(docker wait $id) -eq 0
+  docker commit $id $IMAGE > /dev/null
+  dokku_log_info1 "Deploy script complete"
+else
+  dokku_log_info1 "No deploy script"
+fi
 
