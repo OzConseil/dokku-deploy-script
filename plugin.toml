@@ -1,0 +1,3 @@
+[plugin]
+description = "dokku deploy script plugin"
+version = "0.1.0"

@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -eo pipefail; [[ $DOKKU_TRACE ]] && set -x
+
+echo "-----> Running deploy scripts ..."
+
+dokku enter $APP web npm run deploy
+dokku enter $APP web composer run-script deploy
+
+echo "-----> Deploy scripts done"
+
