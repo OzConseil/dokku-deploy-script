@@ -15,8 +15,7 @@ if [[ -f "$DOKKU_ROOT/$APP/.deploy" ]]; then
 
   docker commit $id $IMAGE > /dev/null
 
- 	dokku_log_info1 "Deploy script complete"
+  dokku_log_info1 "Deploy script complete"
 else
   dokku_log_info1 "No deploy script"
 fi
-
