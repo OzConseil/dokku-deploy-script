@@ -6,11 +6,16 @@ verify_app_name "$APP"
 
 if [[ -f "$DOKKU_ROOT/$APP/.deploy" ]]; then
   dokku_log_info1 "Running deploy script"
-  id=$(docker run -d $IMAGE /bin/bash -c "$(cat $DOKKU_ROOT/$APP/.deploy)")
-  docker logs -f $id
+	id=$(docker run -d $IMAGE)
+
+  docker exec -it $id /bin/bash -c "$(cat $DOKKU_ROOT/$APP/.deploy)"
+
+  docker stop $id
   test $(docker wait $id) -eq 0
+
   docker commit $id $IMAGE > /dev/null
-  dokku_log_info1 "Deploy script complete"
+
+ 	dokku_log_info1 "Deploy script complete"
 else
   dokku_log_info1 "No deploy script"
 fi
