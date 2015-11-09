@@ -8,7 +8,7 @@ if [[ -f "$DOKKU_ROOT/$APP/.deploy" ]]; then
   dokku_log_info1 "Running deploy script"
 	id=$(docker run -d $IMAGE)
 
-  docker exec -it $id /bin/bash -c "$(cat $DOKKU_ROOT/$APP/.deploy)"
+  docker exec $id /bin/bash -c "$(cat $DOKKU_ROOT/$APP/.deploy)"
 
   docker stop $id
   test $(docker wait $id) -eq 0
